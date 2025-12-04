@@ -4,7 +4,7 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     public Transform player;
-    public Transform playerCamera; 
+    public Transform playerCamera;
     
     // Settingan Angel
     public float normalSpeed = 3.5f;
@@ -12,18 +12,20 @@ public class EnemyAI : MonoBehaviour
     public bool isWeepingMode = false;
 
     private NavMeshAgent agent;
-    private Renderer angelRenderer; 
+    public Renderer angelRenderer; 
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        angelRenderer = GetComponent<Renderer>();
         
-        // Auto-detect player kalau lupa drag-drop
+        // --- UBAH BARIS INI ---
+        // Ganti dari GetComponent<Renderer>() menjadi:
+        angelRenderer = GetComponentInChildren<Renderer>(); 
+        // ----------------------
+
+        // (Sisa kodingan biarkan sama)
         if (player == null) player = GameObject.FindGameObjectWithTag("Player").transform;
         if (playerCamera == null) playerCamera = Camera.main.transform;
-
-        // PENTING: Matikan auto-braking biar ga ngerem mendadak
         agent.autoBraking = false; 
     }
 
