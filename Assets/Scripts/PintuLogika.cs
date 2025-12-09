@@ -7,7 +7,7 @@ public class PintuLogika : MonoBehaviour
         // Cek apakah yang nabrak adalah Player
         if (other.CompareTag("Player"))
         {
-            // Cek apakah koin sudah 100?
+            // Cek apakah koin sudah 100? (sementara 3 untuk testing)
             if (GameManager.instance.koinTerkumpul >= 3)
             {
                 Debug.Log("MENANG! ANDA BEBAS!");

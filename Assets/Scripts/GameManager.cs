@@ -4,56 +4,105 @@
 // public class GameManager : MonoBehaviour
 // {
 //     public static GameManager instance;
-//     public TMP_Text textKoin; 
+//     public TMP_Text textUI; // Gabungan teks Koin & Info
+    
+//     [Header("Data Game")]
 //     public int koinTerkumpul = 0;
-//     public int targetKoin = 100;
+//     public int targetTrigger = 99; // Ganti jadi 99 nanti
+//     public int totalKoinFinal = 100; // Total setelah kunci diambil
+
+//     [Header("Referenced Objects")]
+//     public GameObject prefabKunci;   // Drag Prefab KUNCI/Koin ke-100 kesini
+//     public GameObject uiHPMap;       // Drag UI Gambar HP/Minimap kesini
 //     public EnemyAI enemyScript; 
 
 //     void Awake() { if (instance == null) instance = this; }
+
 //     void Start() 
 //     { 
-//         UpdateUI();
-//         // Pasang Minimap otomatis
-//         if (GetComponent<MinimapCamera>() == null)
-//             gameObject.AddComponent<MinimapCamera>();
+//         // Cari script musuh otomatis
+//         if (enemyScript == null) enemyScript = FindAnyObjectByType<EnemyAI>();
+        
+//         // Pastikan Kunci & Pintu sembunyi dulu di awal
+//         if (prefabKunci != null) prefabKunci.SetActive(false);
+        
+//         UpdateUI("Cari jalan keluar...");
 //     }
 
 //     public void TambahKoin()
 //     {
 //         koinTerkumpul++;
-//         UpdateUI();
-
-//         // SAAT KOIN 99 (KLIMAKS)
-//         if (koinTerkumpul == 2)
+        
+//         // FASE 1: TRIGGER CLIMAX (Saat Koin 99 / atau 2 saat testing)
+//         if (koinTerkumpul == targetTrigger)
 //         {
-//             Debug.Log("PINTU MUNCUL! ANGEL MARAH!");
-            
-//             // 1. Angel Marah
-//             if (enemyScript != null) enemyScript.ActivateWeepingMode();
+//             TriggerClimaxMode();
+//         }
+//         // FASE 2: MENANG (Saat Kunci diambil/Koin 100)
+//         else if (koinTerkumpul >= totalKoinFinal)
+//         {
+//             UpdateUI("KUNCI DITEMUKAN! CARI PINTU KELUAR!");
+//             // Disini logika buka pintu aktif
+//         }
+//         else
+//         {
+//             UpdateUI("Koin: " + koinTerkumpul);
+//         }
+//     }
 
-//             // 2. Munculkan Pintu (Cari di anak-anak MazeGenerator)
-//             MazeGeneratorPerfectLoop generator = FindAnyObjectByType<MazeGeneratorPerfectLoop>();
-//             if (generator != null)
+//     void TriggerClimaxMode()
+//     {
+//         Debug.Log("SISTEM ERROR! SINYAL HILANG! ANGEL MARAH!");
+
+//         // 1. Matikan Map/HP
+//         if (uiHPMap != null) 
+//         {
+//             uiHPMap.SetActive(false); 
+//             // Tambahkan efek suara statis/rusak disini nanti
+//         }
+
+//         // 2. Munculkan Kunci (Koin Terakhir)
+//         if (prefabKunci != null)
+//         {
+//             prefabKunci.SetActive(true);
+//             // Tips: Sebaiknya spawn kunci di tengah map atau tempat terjauh
+//             prefabKunci.transform.position = new Vector3(0, 1, 0); 
+//         }
+
+//         // 3. Angel Marah
+//         if (enemyScript != null) enemyScript.ActivateWeepingMode();
+        
+//         // 4. Munculkan Pintu Exit
+//         MunculkanPintu();
+
+//         UpdateUI("SINYAL HILANG... LARI!!!");
+//     }
+
+//     void MunculkanPintu()
+//     {
+//         MazeGeneratorPerfectLoop generator = FindAnyObjectByType<MazeGeneratorPerfectLoop>();
+//         if (generator != null)
+//         {
+//             foreach (Transform child in generator.transform)
 //             {
-//                 foreach (Transform child in generator.transform)
+//                 if (child.CompareTag("Pintu"))
 //                 {
-//                     if (child.CompareTag("Pintu"))
-//                     {
-//                         child.gameObject.SetActive(true); // MUNCULKAN PINTU!
-//                         Debug.Log("PINTU DITEMUKAN DAN DIAKTIFKAN!");
-//                         break;
-//                     }
+//                     child.gameObject.SetActive(true);
+//                     break;
 //                 }
-//             }
-//             else
-//             {
-//                 Debug.LogError("MazeGenerator tidak ditemukan!");
 //             }
 //         }
 //     }
 
-//     void UpdateUI() { if (textKoin != null) textKoin.text = "Koin: " + koinTerkumpul + " / " + targetKoin; }
+//     void UpdateUI(string pesan) 
+//     { 
+//         if (textUI != null) textUI.text = pesan; 
+//     }
 // }
+
+
+
+
 
 
 
@@ -63,76 +112,101 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public TMP_Text textKoin; 
-    public int koinTerkumpul = 0;
-    public int targetKoin = 100;
+    public TMP_Text textUI; // Gabungan teks Koin & Info
     
-    // Variabel ini akan kita isi otomatis lewat kodingan
+    [Header("Data Game")]
+    public int koinTerkumpul = 0;
+    public int targetTrigger = 2; // Ganti jadi 99 nanti
+    public int totalKoinFinal = 100; // Total setelah kunci diambil
+
+    [Header("Referenced Objects")]
+    public GameObject prefabKunci;   // Drag Prefab KUNCI/Koin ke-100 kesini
+    public PhoneController phoneScript; // GANTI: Drag script PhoneController kesini
     public EnemyAI enemyScript; 
 
-    void Awake() 
-    { 
-        if (instance == null) instance = this; 
-    }
+    void Awake() { if (instance == null) instance = this; }
 
     void Start() 
     { 
-        UpdateUI();
+        // Cari script musuh otomatis
+        if (enemyScript == null) enemyScript = FindAnyObjectByType<EnemyAI>();
         
-        // --- TAMBAHAN PENTING ---
-        // Cari otomatis objek yang punya script "EnemyAI" di dalam game
-        if (enemyScript == null) 
-        {
-            enemyScript = FindAnyObjectByType<EnemyAI>();
-        }
+        // Cari script PhoneController otomatis jika belum diisi
+        if (phoneScript == null) phoneScript = FindAnyObjectByType<PhoneController>();
 
-        if (enemyScript == null)
-        {
-            Debug.LogError("GAWAT! Weeping Angel tidak ditemukan di Scene!");
-        }
-        // ------------------------
-
-        // Pasang Minimap otomatis
-        if (GetComponent<MinimapCamera>() == null)
-            gameObject.AddComponent<MinimapCamera>();
+        // Pastikan Kunci & Pintu sembunyi dulu di awal
+        if (prefabKunci != null) prefabKunci.SetActive(false);
+        
+        UpdateUI("Cari jalan keluar... (Tekan M untuk Peta)");
     }
 
     public void TambahKoin()
     {
         koinTerkumpul++;
-        UpdateUI();
-
-        // LOGIKA TESTING (ANGKA 2) HARUSNYA DIGANTI JADI 99
-        if (koinTerkumpul == 2)
+        
+        // FASE 1: TRIGGER CLIMAX (Saat Koin 99 / atau 2 saat testing)
+        if (koinTerkumpul == targetTrigger)
         {
-            Debug.Log("TESTING: KOIN SUDAH 2! ANGEL HARUSNYA MARAH SEKARANG!");
-            
-            // Cek apakah Angel sudah ketemu?
-            if (enemyScript != null) 
-            {
-                enemyScript.ActivateWeepingMode();
-                Debug.Log("Perintah ActivateWeepingMode sudah dikirim ke Angel.");
-            }
-            else
-            {
-                Debug.LogError("GameManager gagal menghubungi Angel (Script kosong).");
-            }
+            TriggerClimaxMode();
+        }
+        // FASE 2: MENANG (Saat Kunci diambil/Koin 100)
+        else if (koinTerkumpul >= totalKoinFinal)
+        {
+            UpdateUI("KUNCI DITEMUKAN! CARI PINTU KELUAR!");
+            // Disini logika buka pintu aktif
+        }
+        else
+        {
+            UpdateUI("Koin: " + koinTerkumpul);
+        }
+    }
 
-            // Munculkan Pintu
-            MazeGeneratorPerfectLoop generator = FindAnyObjectByType<MazeGeneratorPerfectLoop>();
-            if (generator != null)
+    void TriggerClimaxMode()
+    {
+        Debug.Log("SISTEM ERROR! SINYAL HILANG! ANGEL MARAH!");
+
+        // 1. Matikan Map/HP lewat PhoneController
+        if (phoneScript != null) 
+        {
+            phoneScript.ForceClosePhoneAndDisable();
+            // Tambahkan efek suara statis/rusak disini nanti
+        }
+
+        // 2. Munculkan Kunci (Koin Terakhir)
+        if (prefabKunci != null)
+        {
+            prefabKunci.SetActive(true);
+            // Tips: Sebaiknya spawn kunci di tengah map atau tempat terjauh
+            prefabKunci.transform.position = new Vector3(0, 1, 0); 
+        }
+
+        // 3. Angel Marah
+        if (enemyScript != null) enemyScript.ActivateWeepingMode();
+        
+        // 4. Munculkan Pintu Exit
+        MunculkanPintu();
+
+        UpdateUI("SINYAL HILANG... LARI!!!");
+    }
+
+    void MunculkanPintu()
+    {
+        MazeGeneratorPerfectLoop generator = FindAnyObjectByType<MazeGeneratorPerfectLoop>();
+        if (generator != null)
+        {
+            foreach (Transform child in generator.transform)
             {
-                foreach (Transform child in generator.transform)
+                if (child.CompareTag("Pintu"))
                 {
-                    if (child.CompareTag("Pintu"))
-                    {
-                        child.gameObject.SetActive(true);
-                        break;
-                    }
+                    child.gameObject.SetActive(true);
+                    break;
                 }
             }
         }
     }
 
-    void UpdateUI() { if (textKoin != null) textKoin.text = "Koin: " + koinTerkumpul + " / " + targetKoin; }
+    void UpdateUI(string pesan) 
+    { 
+        if (textUI != null) textUI.text = pesan; 
+    }
 }
