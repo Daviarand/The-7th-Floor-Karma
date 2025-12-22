@@ -1,51 +1,69 @@
 // using UnityEngine;
 // using TMPro;
+// using UnityEngine.SceneManagement;
 
 // public class GameManager : MonoBehaviour
 // {
 //     public static GameManager instance;
-//     public TMP_Text textUI; // Gabungan teks Koin & Info
+//     public TMP_Text textUI; 
     
 //     [Header("Data Game")]
 //     public int koinTerkumpul = 0;
-//     public int targetTrigger = 2; // Ganti jadi 99 nanti
-//     public int totalKoinFinal = 100; // Total setelah kunci diambil
+//     public int targetTrigger = 99; 
+//     public int totalKoinFinal = 100; 
 
 //     [Header("Referenced Objects")]
-//     public GameObject prefabKunci;   // Drag Prefab KUNCI/Koin ke-100 kesini
-//     public PhoneController phoneScript; // GANTI: Drag script PhoneController kesini
+//     public GameObject prefabKunci;   
+//     public PhoneController phoneScript; 
 //     public EnemyAI enemyScript; 
+
+//     // --- PERUBAHAN DISINI ---
+//     [Header("Pintu Keluar Manual")]
+//     public GameObject pintuExitObject; // DRAG PINTU YANG ANDA PASANG KESINI
+    
+//     [Header("UI Game Over")]
+//     public GameObject panelGameOver; 
+
+//     public bool isGameOver = false;
 
 //     void Awake() { if (instance == null) instance = this; }
 
 //     void Start() 
 //     { 
-//         // Cari script musuh otomatis
 //         if (enemyScript == null) enemyScript = FindAnyObjectByType<EnemyAI>();
-        
-//         // Cari script PhoneController otomatis jika belum diisi
 //         if (phoneScript == null) phoneScript = FindAnyObjectByType<PhoneController>();
 
-//         // Pastikan Kunci & Pintu sembunyi dulu di awal
 //         if (prefabKunci != null) prefabKunci.SetActive(false);
+//         if (panelGameOver != null) panelGameOver.SetActive(false);
+        
+//         // Sembunyikan Pintu Exit di Awal Game secara otomatis
+//         if (pintuExitObject != null) 
+//         {
+//             pintuExitObject.SetActive(false);
+//         }
+//         else
+//         {
+//             Debug.LogError("PERINGATAN: Anda belum memasukkan objek Pintu ke GameManager!");
+//         }
         
 //         UpdateUI("Cari jalan keluar... (Tekan M untuk Peta)");
+//         Time.timeScale = 1; 
 //     }
 
 //     public void TambahKoin()
 //     {
+//         if (isGameOver) return;
+
 //         koinTerkumpul++;
         
-//         // FASE 1: TRIGGER CLIMAX (Saat Koin 99 / atau 2 saat testing)
 //         if (koinTerkumpul == targetTrigger)
 //         {
 //             TriggerClimaxMode();
 //         }
-//         // FASE 2: MENANG (Saat Kunci diambil/Koin 100)
 //         else if (koinTerkumpul >= totalKoinFinal)
 //         {
 //             UpdateUI("KUNCI DITEMUKAN! CARI PINTU KELUAR!");
-//             // Disini logika buka pintu aktif
+//             // Logika tambahan jika pintu perlu dibuka kuncinya bisa disini
 //         }
 //         else
 //         {
@@ -55,46 +73,41 @@
 
 //     void TriggerClimaxMode()
 //     {
-//         Debug.Log("SISTEM ERROR! SINYAL HILANG! ANGEL MARAH!");
-
-//         // 1. Matikan Map/HP lewat PhoneController
-//         if (phoneScript != null) 
-//         {
-//             phoneScript.ForceClosePhoneAndDisable();
-//             // Tambahkan efek suara statis/rusak disini nanti
-//         }
-
-//         // 2. Munculkan Kunci (Koin Terakhir)
-//         if (prefabKunci != null)
+//         if (phoneScript != null) phoneScript.ForceClosePhoneAndDisable();
+        
+//         if (prefabKunci != null) 
 //         {
 //             prefabKunci.SetActive(true);
-//             // Tips: Sebaiknya spawn kunci di tengah map atau tempat terjauh
 //             prefabKunci.transform.position = new Vector3(0, 1, 0); 
 //         }
-
-//         // 3. Angel Marah
+        
 //         if (enemyScript != null) enemyScript.ActivateWeepingMode();
         
-//         // 4. Munculkan Pintu Exit
-//         MunculkanPintu();
+//         // --- NYALAKAN PINTU MANUAL ---
+//         if (pintuExitObject != null)
+//         {
+//             pintuExitObject.SetActive(true);
+//             Debug.Log("Pintu Keluar Muncul!");
+//         }
 
 //         UpdateUI("SINYAL HILANG... LARI!!!");
 //     }
 
-//     void MunculkanPintu()
+//     public void TriggerGameOver()
 //     {
-//         MazeGeneratorPerfectLoop generator = FindAnyObjectByType<MazeGeneratorPerfectLoop>();
-//         if (generator != null)
-//         {
-//             foreach (Transform child in generator.transform)
-//             {
-//                 if (child.CompareTag("Pintu"))
-//                 {
-//                     child.gameObject.SetActive(true);
-//                     break;
-//                 }
-//             }
-//         }
+//         if (isGameOver) return;
+//         isGameOver = true;
+//         Debug.Log("ANDA TERTANGKAP!");
+//         if (panelGameOver != null) panelGameOver.SetActive(true);
+//         Cursor.lockState = CursorLockMode.None; 
+//         Cursor.visible = true;
+//         Time.timeScale = 0; 
+//     }
+
+//     public void RestartGame()
+//     {
+//         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+//         Time.timeScale = 1;
 //     }
 
 //     void UpdateUI(string pesan) 
@@ -107,124 +120,143 @@
 
 
 
+
+
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement; // Wajib untuk Restart Game
+using System.Collections; 
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public TMP_Text textUI; 
     
+    [Header("UI Story")]
+    public TMP_Text textUI;       
+    public GameObject panelCerita; 
+
     [Header("Data Game")]
     public int koinTerkumpul = 0;
-    public int targetTrigger = 99; 
-    public int totalKoinFinal = 100; 
+    public int targetTrigger = 99; // Pastikan ini 99
+    public int koinTengahJalan = 50; 
+    
+    [Tooltip("Koordinat dimana Kunci akan muncul")]
+    public Vector3 posisiMunculKunci = new Vector3(-6, 1, 0); 
 
     [Header("Referenced Objects")]
-    public GameObject prefabKunci;   
+    public GameObject prefabKunci; // Drag PREFAB KOIN dari folder Project kesini
     public PhoneController phoneScript; 
     public EnemyAI enemyScript; 
+    public GameObject pintuExitObject; 
     
-    [Header("UI Game Over")]
-    public GameObject panelGameOver; // Drag Panel Hitam tadi kesini
+    // Kecepatan Mengetik 
+    private float typingSpeed = 0.03f; 
+    private float bacaDelay = 3f; 
 
-    // Status Game
-    public bool isGameOver = false;
+    private bool isClimax = false;
+    private Coroutine currentStoryRoutine;
 
     void Awake() { if (instance == null) instance = this; }
 
     void Start() 
     { 
-        // Cari script otomatis
         if (enemyScript == null) enemyScript = FindAnyObjectByType<EnemyAI>();
         if (phoneScript == null) phoneScript = FindAnyObjectByType<PhoneController>();
 
-        if (prefabKunci != null) prefabKunci.SetActive(false);
-        if (panelGameOver != null) panelGameOver.SetActive(false); // Pastikan mati di awal
+        // Kita tidak perlu menyembunyikan prefabKunci karena dia masih berupa file prefab
+        if (pintuExitObject != null) pintuExitObject.SetActive(false);
+        if (panelCerita != null) panelCerita.SetActive(false); 
         
-        UpdateUI("Cari jalan keluar... (Tekan M untuk Peta)");
-        Time.timeScale = 1; // Pastikan waktu jalan
+        Time.timeScale = 1; 
+
+        // --- INTRO ---
+        string[] introTeks = {
+            "Kepalaku sakit sekali... Di mana aku sekarang?",
+            "Lantai 7... Konon tempat ini terkutuk. Aku harus segera mencari jalan keluar.",
+            "Sinyal di sini buruk. Untung peta di HP masih berfungsi (Tekan M)."
+        };
+        PlaySequence(introTeks);
     }
 
     public void TambahKoin()
     {
-        if (isGameOver) return; // Kalau sudah kalah, gak bisa ambil koin
-
         koinTerkumpul++;
         
-        if (koinTerkumpul == targetTrigger)
+        // --- Cek Koin Pertama ---
+        if (koinTerkumpul == 1)
+        {
+            string[] koinPertamaTeks = {
+                "Koin emas? Kenapa ada banyak koin berserakan di tempat seram ini?",
+                "Mungkin jika aku mengumpulkannya, sesuatu akan terjadi..."
+            };
+            PlaySequence(koinPertamaTeks);
+        }
+        
+        // --- Cek Pertengahan ---
+        else if (koinTerkumpul == koinTengahJalan)
+        {
+            PlaySequence(new string[] { "Jangan lengah. Aku harus terus bergerak." });
+        }
+
+        // --- Cek KLIMAKS (99 Koin) ---
+        else if (koinTerkumpul == targetTrigger && !isClimax)
         {
             TriggerClimaxMode();
         }
-        else if (koinTerkumpul >= totalKoinFinal)
+        
+        // --- Cek MENANG (100 Koin / Sudah ambil kunci) ---
+        else if (koinTerkumpul >= 100) 
         {
-            UpdateUI("KUNCI DITEMUKAN! CARI PINTU KELUAR!");
-        }
-        else
-        {
-            UpdateUI("Koin: " + koinTerkumpul);
+            PlaySequence(new string[] { "KUNCI SUDAH KETEMU! Pintu Keluar Bisa Terbuka! AKU HARUS LARI!" });
         }
     }
 
     void TriggerClimaxMode()
     {
+        isClimax = true;
+
         if (phoneScript != null) phoneScript.ForceClosePhoneAndDisable();
+        
+        // --- PERBAIKAN DI SINI: INSTANTIATE ---
         if (prefabKunci != null) 
         {
-            prefabKunci.SetActive(true);
-            prefabKunci.transform.position = new Vector3(0, 1, 0); 
+            // Kita "Lahirkan" kuncinya di koordinat yang sudah ditentukan
+            Instantiate(prefabKunci, posisiMunculKunci, Quaternion.identity);
+            Debug.Log("Kunci Muncul di: " + posisiMunculKunci);
         }
-        if (enemyScript != null) enemyScript.ActivateWeepingMode();
-        MunculkanPintu();
-        UpdateUI("SINYAL HILANG... LARI!!!");
-    }
-
-    // --- FUNGSI BARU: GAME OVER (DIPANGGIL OLEH ANGEL) ---
-    public void TriggerGameOver()
-    {
-        if (isGameOver) return;
-        isGameOver = true;
-
-        Debug.Log("ANDA TERTANGKAP!");
-
-        // 1. Munculkan Layar Hitam
-        if (panelGameOver != null) panelGameOver.SetActive(true);
-
-        // 2. Matikan Kontrol Player (Biar gak bisa jalan lagi)
-        Cursor.lockState = CursorLockMode.None; // Munculkan kursor mouse
-        Cursor.visible = true;
         
-        // 3. Matikan Waktu (Game Pause)
-        // Kita beri delay sedikit nanti biar ada efek kaget, tapi untuk sekarang pause dulu
-        Time.timeScale = 0; 
+        if (enemyScript != null) enemyScript.ActivateWeepingMode();
+        if (pintuExitObject != null) pintuExitObject.SetActive(true);
+
+        // Teks Klimaks
+        string[] climaxTeks = {
+            "Sial! HP-ku mati! Sinyalnya hilang total!",
+            "Suara apa itu? Sesuatu yang buruk sedang mendekat!",
+            "Aku harus mencari kunci dan lari ke pintu keluar SEKARANG!"
+        };
+        PlaySequence(climaxTeks);
     }
 
-    public void RestartGame()
+    public void PlaySequence(string[] daftarKalimat)
     {
-        // Reload Scene saat ini
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Time.timeScale = 1;
+        if (currentStoryRoutine != null) StopCoroutine(currentStoryRoutine);
+        currentStoryRoutine = StartCoroutine(SequenceProcess(daftarKalimat));
     }
 
-    void MunculkanPintu()
+    IEnumerator SequenceProcess(string[] lines)
     {
-        MazeGeneratorPerfectLoop generator = FindAnyObjectByType<MazeGeneratorPerfectLoop>();
-        if (generator != null)
+        if (panelCerita != null) panelCerita.SetActive(true);
+        foreach (string kalimat in lines)
         {
-            foreach (Transform child in generator.transform)
+            if (textUI != null) textUI.text = ""; 
+            foreach (char huruf in kalimat.ToCharArray())
             {
-                if (child.CompareTag("Pintu"))
-                {
-                    child.gameObject.SetActive(true);
-                    break;
-                }
+                if (textUI != null) textUI.text += huruf;
+                yield return new WaitForSeconds(typingSpeed);
             }
+            yield return new WaitForSeconds(bacaDelay);
         }
-    }
-
-    void UpdateUI(string pesan) 
-    { 
-        if (textUI != null) textUI.text = pesan; 
+        if (textUI != null) textUI.text = "";
+        if (panelCerita != null) panelCerita.SetActive(false);
+        currentStoryRoutine = null;
     }
 }
