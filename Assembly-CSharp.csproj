@@ -49,8 +49,10 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\EnemyAI.cs" />
     <Compile Include="Assets\Scripts\PhoneController.cs" />
+    <Compile Include="Assets\Scripts\ElevatorFlicker.cs" />
     <Compile Include="Assets\Scripts\MinimapCamera.cs" />
     <Compile Include="Assets\Scripts\MazeGenerator.cs" />
+    <Compile Include="Assets\Scripts\ElectricSparkSound.cs" />
     <Compile Include="Assets\Scripts\Koin.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Phoenix3D\Demo\Scripts\MaterialSwithcer.cs" />

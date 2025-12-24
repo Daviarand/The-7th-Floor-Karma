@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f573656b87e1837499fdf3db554ca4a0
+guid: 11ac74f5a1766724bbce7f8a2b2b7bee
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,18 +7,53 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: AngelBody
-    second: {fileID: 2100000, guid: ebd97aaf549d1024b946479c2e3f3d53, type: 2}
+      name: Material #172
+    second: {fileID: 2100000, guid: 4524bd1bb6ebb56479a3e325f850c176, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: AngelFace
-    second: {fileID: 2100000, guid: 3f9f127a56d0b2e4e8e2d510a3f5d50b, type: 2}
+      name: Material #2
+    second: {fileID: 2100000, guid: ee3470fdd594616479bd95d3b995a2fe, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: AngelWings
-    second: {fileID: 2100000, guid: f22da0663b2a2094f9f3cd7eebe28a70, type: 2}
+      name: 'Material #259 [Main Body]'
+    second: {fileID: 2100000, guid: 65b93465f47d69c4d980bb5b52f9ab58, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material #3
+    second: {fileID: 2100000, guid: 848d96fba66588b4383b951a5ed461f7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material #38
+    second: {fileID: 2100000, guid: 7528382ad257e914b88af724953f2cab, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: TexturesCom_Metal_Corroded_512_albedo
+    second: {fileID: 2800000, guid: 81b639559047aea48940e5b94e20951b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: TexturesCom_Metal_Corroded_512_roughness
+    second: {fileID: 2800000, guid: 6d1cd4f817c51374cadbf5ac1ea7f3c4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: TexturesCom_Metal_SteelBrushed_512_roughness
+    second: {fileID: 2800000, guid: f16327ae7f9f5704a814ac19c2dfe928, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: bmp
+    second: {fileID: 2800000, guid: 7eda3ca696eaf5c439ac421d4f747b67, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: diff
+    second: {fileID: 2800000, guid: 8a51c7cfad118d64592828671c814660, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -44,94 +79,7 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations:
-    - serializedVersion: 16
-      name: Angelidle_skeleton|idle
-      takeName: Angelidle_skeleton|idle
-      internalID: -3744065133661285921
-      firstFrame: 0
-      lastFrame: 0
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Angelidle_skeleton|idle001
-      takeName: Angelidle_skeleton|idle.001
-      internalID: 6429763538365255619
-      firstFrame: 0
-      lastFrame: 0
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Angelidle_skeleton|idle002
-      takeName: Angelidle_skeleton|idle.002
-      internalID: 7533092489236296300
-      firstFrame: 0
-      lastFrame: 0
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+    clipAnimations: []
     isReadable: 0
   meshes:
     lODScreenPercentages: []
