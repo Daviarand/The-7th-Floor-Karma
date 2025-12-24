@@ -58,6 +58,7 @@
     <Compile Include="Assets\Phoenix3D\Demo\Scripts\MaterialSwithcer.cs" />
     <Compile Include="Assets\Scripts\FixTextureTiling.cs" />
     <Compile Include="Assets\Scripts\PintuLogika.cs" />
+    <Compile Include="Assets\Scripts\DoctorVisual.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
   </ItemGroup>
