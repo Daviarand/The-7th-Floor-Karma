@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 119112226708238857}
   - component: {fileID: 1584437429629470979}
   - component: {fileID: 3000954692169154211}
-  - component: {fileID: 8116512329110246963}
+  - component: {fileID: -8316365746847533718}
   m_Layer: 0
   m_Name: Koin
   m_TagString: Untagged
@@ -114,7 +114,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &8116512329110246963
+--- !u!114 &-8316365746847533718
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
