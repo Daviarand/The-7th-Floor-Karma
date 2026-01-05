@@ -11,9 +11,9 @@
 //     public TMP_Text textUI;
 //     public GameObject panelCerita;
 
-//     // --- TAMBAHAN BARU: UI KARMA ---
 //     [Header("UI Gameplay")]
 //     public TMP_Text textKarma; 
+//     public TMP_Text textHealth; // TARIK TEKS NYAWA KE SINI
 
 //     [Header("UI Jumpscare")]
 //     public GameObject jumpscarePanel;
@@ -44,7 +44,9 @@
 //     [Range(0f, 5f)]
 //     public float volumeJumpscare = 1.0f;
 
-//     // Settingan Teks
+//     [Header("Health Settings")]
+//     public int playerHealth = 3; 
+
 //     private float typingSpeed = 0.05f;
 //     private float bacaDelay = 3f;
 
@@ -52,9 +54,6 @@
 //     private bool isGameOver = false;
 //     private Coroutine currentStoryRoutine;
 
-//     // ==========================================
-//     // BAGIAN BARU: VARIASI TEKS INTRO MAINSCENE
-//     // ==========================================
 //     [Header("Variasi Teks Intro")]
 //     [TextArea(2,5)]
 //     public string[] introLoop0 = {
@@ -76,7 +75,6 @@
 //         "Aku minta maaf Bu... Aku minta maaf Yah...",
 //         "Tolong biarkan aku pergi... Aku tidak mau terjebak selamanya..."
 //     };
-//     // ==========================================
 
 //     void Awake() { if (instance == null) instance = this; }
 
@@ -97,6 +95,7 @@
 //         if (jumpscarePanel != null) jumpscarePanel.SetActive(false);
 
 //         UpdateKarmaUI();
+//         UpdateHealthUI(); // Tampilkan nyawa di awal
 //         Time.timeScale = 1;
 
 //         StartCoroutine(StartIntroWithDelay());
@@ -105,47 +104,57 @@
 //     IEnumerator StartIntroWithDelay()
 //     {
 //         yield return new WaitForSeconds(3f);
-
-//         // --- LOGIKA BARU: PILIH TEKS BERDASARKAN LOOP ---
 //         int loopCount = PlayerPrefs.GetInt("LoopCount", 0);
 //         string[] selectedIntro;
 
-//         if (loopCount == 0)
-//         {
-//             selectedIntro = introLoop0; // Teks Normal
-//         }
-//         else if (loopCount == 1)
-//         {
-//             selectedIntro = introLoop1; // Teks Bingung (Loop 1)
-//         }
-//         else
-//         {
-//             selectedIntro = introLoop2; // Teks Putus Asa (Loop 2++)
-//         }
+//         if (loopCount == 0) selectedIntro = introLoop0; 
+//         else if (loopCount == 1) selectedIntro = introLoop1; 
+//         else selectedIntro = introLoop2; 
 
 //         PlaySequence(selectedIntro);
-//         // ------------------------------------------------
+//     }
+
+//     public void KurangiNyawa()
+//     {
+//         if (isGameOver) return;
+//         playerHealth--;
+//         UpdateHealthUI(); // Update teks setiap kali kena pukul
+
+//         if (playerHealth <= 0)
+//         {
+//             TriggerJumpscare();
+//         }
+//     }
+
+//     void UpdateHealthUI()
+//     {
+//         if (textHealth != null)
+//         {
+//             textHealth.text = "NYAWA: " + playerHealth;
+//         }
 //     }
 
 //     public void TambahKoin()
 //     {
 //         koinTerkumpul++;
 //         UpdateKarmaUI();
-
 //         if (sfxSource != null && sfxKoin != null) sfxSource.PlayOneShot(sfxKoin);
 
+//         int loopCount = PlayerPrefs.GetInt("LoopCount", 0);
 //         if (koinTerkumpul == 1)
 //         {
-//             // Tips: Kamu juga bisa bikin logika LoopCount disini kalau mau teks koinnya berubah juga
-//             string[] koinPertamaTeks = {
-//                 "Koin emas? Kenapa ada banyak koin berserakan di tempat seram ini?",
-//                 "Mungkin jika aku mengumpulkannya, sesuatu akan terjadi..."
-//             };
-//             PlaySequence(koinPertamaTeks);
+//             if (loopCount == 0)
+//             {
+//                 string[] koinPertamaTeks = {
+//                     "Koin emas? Kenapa ada banyak koin berserakan di tempat seram ini?",
+//                     "Mungkin jika aku mengumpulkannya, sesuatu akan terjadi..."
+//                 };
+//                 PlaySequence(koinPertamaTeks);
+//             }
 //         }
 //         else if (koinTerkumpul == koinTengahJalan)
 //         {
-//             PlaySequence(new string[] { "Jangan lengah. Aku harus terus bergerak." });
+//             if (loopCount == 0) PlaySequence(new string[] { "Jangan lengah. Aku harus terus bergerak." });
 //         }
 //         else if (koinTerkumpul == targetTrigger && !isClimax)
 //         {
@@ -157,42 +166,38 @@
 //         }
 //     }
 
-//     void UpdateKarmaUI()
-//     {
-//         if (textKarma != null)
-//         {
-//             textKarma.text = "KOIN: " + koinTerkumpul;
-//         }
-//     }
-
 //     void TriggerClimaxMode()
 //     {
 //         isClimax = true;
 //         if (phoneScript != null) phoneScript.ForceClosePhoneAndDisable();
-
 //         if (prefabKunci != null) Instantiate(prefabKunci, posisiMunculKunci, Quaternion.identity);
 //         if (enemyScript != null) enemyScript.ActivateWeepingMode();
 //         if (pintuExitObject != null) pintuExitObject.SetActive(true);
 
-//         string[] climaxTeks = {
-//             "Sial! HP-ku mati! Sinyalnya hilang total!",
-//             "Aku harus mencari kunci dan lari ke pintu keluar SEKARANG!"
-//         };
-//         PlaySequence(climaxTeks);
+//         int loopCount = PlayerPrefs.GetInt("LoopCount", 0);
+//         if (loopCount == 0)
+//         {
+//             string[] climaxTeks = {
+//                 "Sial! HP-ku mati! Sinyalnya hilang total!",
+//                 "Aku harus mencari kunci dan lari ke pintu keluar SEKARANG!"
+//             };
+//             PlaySequence(climaxTeks);
+//         }
+//     }
+
+//     void UpdateKarmaUI()
+//     {
+//         if (textKarma != null) textKarma.text = "KOIN: " + koinTerkumpul;
 //     }
 
 //     public void TriggerJumpscare()
 //     {
 //         if (isGameOver) return;
 //         isGameOver = true;
-
 //         if (jumpscarePanel != null) jumpscarePanel.SetActive(true);
-
 //         if (sfxSource != null && jumpscareSound != null)
 //             sfxSource.PlayOneShot(jumpscareSound, volumeJumpscare);
-
 //         if (bgmSource != null) bgmSource.Stop();
-
 //         Time.timeScale = 0f;
 //     }
 
@@ -211,39 +216,28 @@
 //     IEnumerator SequenceProcess(string[] lines)
 //     {
 //         if (panelCerita != null) panelCerita.SetActive(true);
-
 //         foreach (string kalimat in lines)
 //         {
 //             if (textUI != null) textUI.text = "";
-
 //             if (sfxSource != null && sfxStory != null)
 //             {
 //                 sfxSource.clip = sfxStory;
 //                 sfxSource.loop = true;
 //                 sfxSource.Play();
 //             }
-
 //             foreach (char huruf in kalimat.ToCharArray())
 //             {
 //                 if (textUI != null) textUI.text += huruf;
 //                 yield return new WaitForSeconds(typingSpeed);
 //             }
-
-//             if (sfxSource != null)
-//             {
-//                 sfxSource.Stop();
-//                 sfxSource.loop = false;
-//             }
-
+//             if (sfxSource != null) { sfxSource.Stop(); sfxSource.loop = false; }
 //             yield return new WaitForSeconds(bacaDelay);
 //         }
-
 //         if (textUI != null) textUI.text = "";
 //         if (panelCerita != null) panelCerita.SetActive(false);
 //         currentStoryRoutine = null;
 //     }
 // }
-
 
 
 
@@ -267,6 +261,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Gameplay")]
     public TMP_Text textKarma; 
+    public TMP_Text textHealth; 
 
     [Header("UI Jumpscare")]
     public GameObject jumpscarePanel;
@@ -297,7 +292,9 @@ public class GameManager : MonoBehaviour
     [Range(0f, 5f)]
     public float volumeJumpscare = 1.0f;
 
-    // Settingan Teks
+    [Header("Health Settings")]
+    public int playerHealth = 3; 
+
     private float typingSpeed = 0.05f;
     private float bacaDelay = 3f;
 
@@ -305,9 +302,6 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;
     private Coroutine currentStoryRoutine;
 
-    // ==========================================
-    // VARIASI TEKS INTRO MAINSCENE
-    // ==========================================
     [Header("Variasi Teks Intro")]
     [TextArea(2,5)]
     public string[] introLoop0 = {
@@ -349,6 +343,7 @@ public class GameManager : MonoBehaviour
         if (jumpscarePanel != null) jumpscarePanel.SetActive(false);
 
         UpdateKarmaUI();
+        UpdateHealthUI(); 
         Time.timeScale = 1;
 
         StartCoroutine(StartIntroWithDelay());
@@ -357,8 +352,6 @@ public class GameManager : MonoBehaviour
     IEnumerator StartIntroWithDelay()
     {
         yield return new WaitForSeconds(3f);
-
-        // --- LOGIKA PILIH TEKS BERDASARKAN LOOP ---
         int loopCount = PlayerPrefs.GetInt("LoopCount", 0);
         string[] selectedIntro;
 
@@ -369,22 +362,35 @@ public class GameManager : MonoBehaviour
         PlaySequence(selectedIntro);
     }
 
-    // ==========================================================
-    // BAGIAN YANG DIUBAH: Pengecekan Loop sebelum Muncul Teks
-    // ==========================================================
+    public void KurangiNyawa()
+    {
+        if (isGameOver) return;
+        playerHealth--;
+        UpdateHealthUI(); 
+
+        if (playerHealth <= 0)
+        {
+            TriggerJumpscare();
+        }
+    }
+
+    void UpdateHealthUI()
+    {
+        if (textHealth != null)
+        {
+            textHealth.text = "NYAWA: " + playerHealth;
+        }
+    }
+
     public void TambahKoin()
     {
         koinTerkumpul++;
         UpdateKarmaUI();
-
         if (sfxSource != null && sfxKoin != null) sfxSource.PlayOneShot(sfxKoin);
 
-        // Kita cek dulu ini loop keberapa
         int loopCount = PlayerPrefs.GetInt("LoopCount", 0);
-
         if (koinTerkumpul == 1)
         {
-            // HANYA MUNCUL JIKA PEMAIN BARU (Loop 0)
             if (loopCount == 0)
             {
                 string[] koinPertamaTeks = {
@@ -396,11 +402,7 @@ public class GameManager : MonoBehaviour
         }
         else if (koinTerkumpul == koinTengahJalan)
         {
-            // HANYA MUNCUL JIKA PEMAIN BARU (Loop 0)
-            if (loopCount == 0)
-            {
-                PlaySequence(new string[] { "Jangan lengah. Aku harus terus bergerak." });
-            }
+            if (loopCount == 0) PlaySequence(new string[] { "Jangan lengah. Aku harus terus bergerak." });
         }
         else if (koinTerkumpul == targetTrigger && !isClimax)
         {
@@ -408,8 +410,6 @@ public class GameManager : MonoBehaviour
         }
         else if (koinTerkumpul >= 100)
         {
-            // Teks ending tetap dimunculkan (atau mau dihilangkan juga boleh)
-            // Disini saya biarkan muncul sebagai tanda sudah selesai
             PlaySequence(new string[] { "KUNCI DITEMUKAN! Pintu Keluar Terbuka! AKU HARUS LARI!" });
         }
     }
@@ -417,16 +417,12 @@ public class GameManager : MonoBehaviour
     void TriggerClimaxMode()
     {
         isClimax = true;
-        
-        // Logika Gameplay (Tetap Jalan meski Loop 2)
         if (phoneScript != null) phoneScript.ForceClosePhoneAndDisable();
         if (prefabKunci != null) Instantiate(prefabKunci, posisiMunculKunci, Quaternion.identity);
         if (enemyScript != null) enemyScript.ActivateWeepingMode();
         if (pintuExitObject != null) pintuExitObject.SetActive(true);
 
-        // Logika Teks (Hanya muncul di Loop 0)
         int loopCount = PlayerPrefs.GetInt("LoopCount", 0);
-        
         if (loopCount == 0)
         {
             string[] climaxTeks = {
@@ -435,31 +431,33 @@ public class GameManager : MonoBehaviour
             };
             PlaySequence(climaxTeks);
         }
-        // Jika Loop 2 dst, tidak ada teks, langsung dikejar hantu (lebih tegang)
     }
-    // ==========================================================
 
     void UpdateKarmaUI()
     {
-        if (textKarma != null)
-        {
-            textKarma.text = "KOIN: " + koinTerkumpul;
-        }
+        if (textKarma != null) textKarma.text = "KOIN: " + koinTerkumpul;
     }
 
     public void TriggerJumpscare()
     {
         if (isGameOver) return;
         isGameOver = true;
-
         if (jumpscarePanel != null) jumpscarePanel.SetActive(true);
-
         if (sfxSource != null && jumpscareSound != null)
             sfxSource.PlayOneShot(jumpscareSound, volumeJumpscare);
-
         if (bgmSource != null) bgmSource.Stop();
+        
+        // --- TAMBAHAN AUTO RESET ---
+        // Kita gunakan WaitUntil agar Coroutine tetap jalan meski Time.timeScale = 0
+        StartCoroutine(AutoResetGame(5f));
+    }
 
-        Time.timeScale = 0f;
+    // FUNGSI AUTO RESET BARU
+    IEnumerator AutoResetGame(float delay)
+    {
+        // Menggunakan WaitForSecondsRealtime karena Time.timeScale dipause (0f)
+        yield return new WaitForSecondsRealtime(delay);
+        RestartGame();
     }
 
     public void RestartGame()
@@ -477,33 +475,23 @@ public class GameManager : MonoBehaviour
     IEnumerator SequenceProcess(string[] lines)
     {
         if (panelCerita != null) panelCerita.SetActive(true);
-
         foreach (string kalimat in lines)
         {
             if (textUI != null) textUI.text = "";
-
             if (sfxSource != null && sfxStory != null)
             {
                 sfxSource.clip = sfxStory;
                 sfxSource.loop = true;
                 sfxSource.Play();
             }
-
             foreach (char huruf in kalimat.ToCharArray())
             {
                 if (textUI != null) textUI.text += huruf;
                 yield return new WaitForSeconds(typingSpeed);
             }
-
-            if (sfxSource != null)
-            {
-                sfxSource.Stop();
-                sfxSource.loop = false;
-            }
-
+            if (sfxSource != null) { sfxSource.Stop(); sfxSource.loop = false; }
             yield return new WaitForSeconds(bacaDelay);
         }
-
         if (textUI != null) textUI.text = "";
         if (panelCerita != null) panelCerita.SetActive(false);
         currentStoryRoutine = null;
