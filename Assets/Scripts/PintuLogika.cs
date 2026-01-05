@@ -38,7 +38,7 @@ public class PintuLogika : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // if (GameManager.instance.koinTerkumpul >= 100)
-            if (GameManager.instance.koinTerkumpul >= 100)
+            if (GameManager.instance.koinTerkumpul >= 2)
             {
                 Debug.Log("Pindah ke Outro...");
                 

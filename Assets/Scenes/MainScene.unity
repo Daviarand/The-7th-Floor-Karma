@@ -23656,7 +23656,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &410087040
 Light:
   m_ObjectHideFlags: 0
@@ -98245,7 +98245,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1925306899684769317, guid: 5f9e7b5e6b5023a4e954601bc59c8fc8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2935104794651577068, guid: 5f9e7b5e6b5023a4e954601bc59c8fc8, type: 3}
       propertyPath: m_IsActive
@@ -121939,7 +121939,7 @@ MonoBehaviour:
   textKarma: {fileID: 546117620}
   jumpscarePanel: {fileID: 2114835995}
   koinTerkumpul: 0
-  targetTrigger: 99
+  targetTrigger: 2
   koinTengahJalan: 50
   posisiMunculKunci: {x: -6, y: 1, z: 0}
   prefabKunci: {fileID: 2513908980080648245, guid: 7cfc8cf3fcf006e4291bdffae394a64b, type: 3}
@@ -121996,8 +121996,8 @@ MonoBehaviour:
   centerOffset: {x: 0, y: 0}
   height: 50
   viewSize: 8
-  mapRotationY: 180
-  mapRotationZ: 90
+  mapRotationY: 90
+  mapRotationZ: 0
   backgroundColor: {r: 0, g: 0, b: 0, a: 1}
   disableShadows: 1
   targetTexture: {fileID: 8400000, guid: eca46628a6d24f540b175a5b04353110, type: 2}
