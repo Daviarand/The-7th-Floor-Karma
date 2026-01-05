@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/OutroCutscene.unity
     guid: eb46f0fd437a1eb4babd724d733ffd5d
+  - enabled: 1
+    path: Assets/Scenes/MainMenuScene.unity
+    guid: 5d645f063bac9f54886679a868901a31
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
