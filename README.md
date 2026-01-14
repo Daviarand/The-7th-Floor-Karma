@@ -117,4 +117,4 @@ Game ini masih dalam tahap pengembangan aktif. Fitur yang akan datang meliputi:
 
 [ ] Variasi musuh dan jebakan.
 
-Dibuat dengan ❤️ dan ☕ untuk tugas/proyek game development.
+
